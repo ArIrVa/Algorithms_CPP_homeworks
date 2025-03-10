@@ -6,17 +6,15 @@
 using namespace std;
 
 u_int _hash(string str, u_int l)
-{
-    char ch{};
+{    
     u_int hash_sum{};
-
     for (u_int i = 0; i < l; ++i)
-    {
-        ch = str[i];
-        hash_sum += static_cast<int>(ch);
+    {       
+        hash_sum += static_cast<int>(str[i]);   
     }
     return hash_sum;
 }
+
 
 int find_substring_light_rabin_karp(string s, string p)
 {
@@ -24,6 +22,8 @@ int find_substring_light_rabin_karp(string s, string p)
     u_int k = p.length(); // длина шаблона p
     u_int p_hash{};       // хеш шаблона p
     int symbols_hash{};   // хеш символов
+    
+    int result_index = -1;  //  признак -1 - строка не найдена
 
     p_hash = _hash(p, k);
 
@@ -44,20 +44,19 @@ int find_substring_light_rabin_karp(string s, string p)
         }
         else
         {
+            result_index = i;   // нашли позицию по совпадению хеш-сумм, запомним результат
             for (int j = 0; j < k; ++j)
             {
                 if (s[i + j] != p[j])
                 {
-                    continue;
-                }
-                else
-                {
-                    return i;
+                    result_index = -1;  // один из символов не совпал, результат = -1, строка не найдена 
+                    break;              // больше не проверяем, выходим
                 }
             }
+            break;  // все символы совпали, прекращаем поиск
         }
     }
-    return -1;
+    return result_index;
 }
 
 int main()
